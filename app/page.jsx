@@ -1,3 +1,5 @@
+import Feed from "@components/Feed";
+
 const Home = () => {
   return (
     <section className="w-full flex-center flex-col">
@@ -10,6 +12,8 @@ const Home = () => {
         Promptly is an open-source tool to collaborate and share AI powered
         prompts for a simpler tomorrow
       </p>
+
+      <Feed />
     </section>
   );
 };

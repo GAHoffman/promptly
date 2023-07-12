@@ -1,7 +1,9 @@
-import React from "react";
+import PromptCard from "./PromptCard";
 
-const Profile = () => {
-  return <div>Profile</div>;
+const Profile = ({ name, desc, data, handleEdit, handleDelete }) => {
+  return (
+
+  );
 };
 
 export default Profile;

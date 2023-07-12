@@ -8,12 +8,15 @@ import Profile from "@components/Profile";
 
 const MyProfile = () => {
   const { data: session } = useSession();
+  const router = useRouter();
 
   const [allPosts, setAllPosts] = useState([]);
 
-  const handleEdit = () => {};
+  const handleEdit = (post) => {
+    router.push(`/update-prompt?id=${post._id}`);
+  };
 
-  const handleDelete = async () => {};
+  const handleDelete = async (post) => {};
 
   const fetchAllPosts = async () => {
     const response = await fetch(`/api/users/${session?.user.id}/posts`);

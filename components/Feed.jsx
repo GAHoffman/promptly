@@ -33,13 +33,39 @@ const Feed = () => {
     setAllPosts(data);
   };
 
-  const handleSearchChange = (e) => {};
-
-  const handleTagClick = () => {};
-
   useEffect(() => {
     fetchAllPosts();
   }, []);
+
+  const filterPrompts = (searchText) => {
+    const regex = new RegExp(searchText, "i"); //not case sensitive
+    return allPosts.filter(
+      (p) =>
+        regex.test(p.creator.username) ||
+        regex.test(p.prompt) ||
+        regex.test(p.tag)
+    );
+  };
+
+  const handleSearchChange = (e) => {
+    clearTimeout(searchTimeout);
+    setSearchText(e.target.value);
+
+    // debounce - means to prevent too many activations
+    setSearchTimeout(
+      setTimeout(() => {
+        const searchResult = filterPrompts(e.target.value);
+        setSearchedResults(searchResult);
+      }, 500)
+    );
+  };
+
+  const handleTagClick = (tagName) => {
+    setSearchText(tagName);
+
+    const searchResult = filterPrompts(tagName);
+    setSearchedResults(searchResult);
+  };
 
   return (
     <section className="feed">
@@ -54,7 +80,15 @@ const Feed = () => {
         />
       </form>
 
-      <PromptCardList data={allPosts} handleTagClick={handleTagClick} />
+      {/* updated view for filter */}
+      {searchText ? (
+        <PromptCardList
+          data={searchedResults}
+          handleTagClick={handleTagClick}
+        />
+      ) : (
+        <PromptCardList data={allPosts} handleTagClick={handleTagClick} />
+      )}
     </section>
   );
 };

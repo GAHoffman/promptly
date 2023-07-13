@@ -34,6 +34,8 @@ const UpdatePrompt = () => {
     e.preventDefault();
     setSubmitting(true);
 
+    if (!promptId) return alert("Missing promptId");
+
     try {
       const response = await fetch(`/api/prompt/${promptId}`, {
         method: "PATCH",

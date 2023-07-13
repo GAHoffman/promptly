@@ -10,30 +10,47 @@ const MyProfile = () => {
   const { data: session } = useSession();
   const router = useRouter();
 
-  const [allPosts, setAllPosts] = useState([]);
+  const [myPosts, setMyPosts] = useState([]);
+
+  const fetchMyPosts = async () => {
+    const response = await fetch(`/api/users/${session?.user.id}/posts`);
+    const data = await response.json();
+
+    setMyPosts(data);
+  };
+
+  useEffect(() => {
+    if (session?.user.id) fetchMyPosts();
+  }, [session?.user.id]);
 
   const handleEdit = (post) => {
     router.push(`/update-prompt?id=${post._id}`);
   };
 
-  const handleDelete = async (post) => {};
+  const handleDelete = async (post) => {
+    const confirmDelete = confirm(
+      "Are you sure you want to delete this prompt?"
+    );
 
-  const fetchAllPosts = async () => {
-    const response = await fetch(`/api/users/${session?.user.id}/posts`);
-    const data = await response.json();
+    if (confirmDelete) {
+      try {
+        await fetch(`/api/prompt/${post._id.toString()}`, {
+          method: "DELETE",
+        });
 
-    setAllPosts(data);
+        const filteredPosts = myPosts.filter((p) => p._id !== post._id);
+        setMyPosts(filteredPosts);
+      } catch (error) {
+        console.log(error);
+      }
+    }
   };
-
-  useEffect(() => {
-    if (session?.user.id) fetchAllPosts();
-  }, []);
 
   return (
     <Profile
       name="My"
       desc="Welcome to your personalized profile page"
-      data={allPosts}
+      data={myPosts}
       handleEdit={handleEdit}
       handleDelete={handleDelete}
     />
